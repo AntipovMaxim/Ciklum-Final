@@ -10,6 +10,8 @@
 <li>Login: admin, password: admin</li>
 </ul>
 
+<h6>Or you can enjoy this app on https://final-ciklum.herokuapp.com/</h6>
+
 
 
 <h3>Technologies has used:</h3>
