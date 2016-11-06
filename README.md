@@ -7,7 +7,9 @@
 <li>npm install</li>
 <li>npm start</li>
 <li>Open a browser on http://localhost:3000</li>
+<li>Login: admin, password: admin<li>
 </ul>
+
 
 
 <h3>Technologies has used:</h3>
