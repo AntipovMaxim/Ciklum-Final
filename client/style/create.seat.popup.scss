@@ -1,0 +1,36 @@
+@import 'vars';
+
+.create_pop_up {
+  z-index: 999;
+  position: absolute;
+  border: 1px solid $main_color;
+  background: #fff;
+  padding: 17px 5px 5px;
+  width: 150px;
+
+  .create_add {
+    padding: 5px;
+    margin-top: 5px;
+    background: lighten($main_color, 10%);
+
+    &:hover {
+      background: $main_color;
+    }
+  }
+
+}
+
+.close {
+  display: none;
+}
+
+.closePopUp {
+  position: absolute;
+  top: -8px;
+  right: 0;
+  color: lighten($main_color, 10%);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+
+}

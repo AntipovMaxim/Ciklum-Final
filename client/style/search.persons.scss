@@ -1,0 +1,26 @@
+.search_box {
+  z-index: 1500;
+  position: absolute;
+  background: #3E85A2;
+  color: #fff;
+
+  ul {
+    margin: 0;
+    padding: 5px 5px 0;
+  }
+
+  li {
+    list-style: none;
+    border-bottom: 1px solid #fff;
+    width: 215px;
+    cursor: pointer;
+  }
+}
+
+.search_info {
+  position: relative;
+
+  input[type="text"] {
+    margin-right: 10px;
+  }
+}

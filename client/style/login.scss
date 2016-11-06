@@ -1,0 +1,33 @@
+.login_box {
+  position: relative;
+
+  input {
+    margin-bottom: 5px;
+    padding: 3px;
+  }
+
+  form {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 1500;
+    padding: 20px 5px 5px;
+    background: $main_color;
+    width: 200px;
+  }
+
+  small {
+    color: red;
+  }
+}
+
+.close_pop_up_login {
+  position: absolute;
+  top: -6px;
+  right: 1px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+}
+
