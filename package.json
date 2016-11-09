@@ -6,7 +6,9 @@
   "repository": "",
   "scripts": {
     "server": "webpack-dev-server --history-api-fallback --inline --progress",
-    "start": "nodemon server/server"
+    "start": "nodemon server/server",
+    "build": "webpack --progress"
+
   },
   "author": "Antipov Max",
   "license": "ISC",

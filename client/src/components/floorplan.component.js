@@ -41,17 +41,11 @@ class FloorPlan extends Component {
         if (this.props.person.selectionMode == false) {
 
             //SELECTION MODE - OFF
-            if (e.target.tagName == 'DIV') {
-                e.target.childNodes[1].style.display = 'block';
-                this.setState({titleInput: false})
 
-            }
+            //open popup
+            this.props.seat.seats[index].open = true;
 
-            if (e.target.tagName == 'SPAN') {
-                e.target.parentNode.childNodes[1].style.display = 'block';
-                this.setState({titleInput: false})
 
-            }
         } else {
 
             //SELECTION MODE - ON
@@ -157,8 +151,11 @@ class FloorPlan extends Component {
     }
 
     //CLOSE SEAT POPUP
-    closePopUp(e) {
-        e.target.parentNode.parentNode.style.display = 'none';
+    closePopUp(index) {
+        // e.target.parentNode.parentNode.style.display = 'none';
+
+        this.props.seat.seats[index].open = false;
+
         this.setState({titleInput: false, personInput: false})
 
     }
@@ -166,7 +163,9 @@ class FloorPlan extends Component {
 
     //DELETE SEAT
     deleteSeat(s, index, ui, current) {
-            ui.target.parentNode.style.display = 'none';
+        //close PopUP
+        this.props.seat.seats[index].open = false;
+
         if (confirm("Are you sure you want to delete this seat?")) {
 
             this.props.deleteSeat(s._id, index);
@@ -282,6 +281,62 @@ class FloorPlan extends Component {
         });
 
 
+        const seat_pop_up = this.props.seat.seats.map((seat, index)=>{
+            return(
+
+            <Draggable key={index}
+                       axis="both"
+                       handle=".seat_popup"
+                       disabled={this.props.person.selectionMode == false && this.props.auth.login ? false : true}
+                       id={seat._id}
+                       start={{x: seat.x, y: seat.y}}
+                       position={{x: seat.x, y: seat.y}}
+                       bounds="parent"
+                // onStart={::this.startDrag}
+                       >
+
+                <div className={seat.open  ? 'open seat_popup' : 'close'}>
+                    {!this.state.titleInput ?
+                        <h6 onClick={::this.openInputTitle}>{`Title: ${seat.title}`}</h6> :
+                        <form ref="form" className={!this.state.titleInput ? 'close' : 'change_title'}
+                              onSubmit={this.changeTitle.bind(this, seat, index)}>
+                            <input className="form-control" type="text" defaultValue={seat.title}/>
+                            <input className="btn btn-secondary" type="submit" value="Save"/>
+                        </form> }
+
+
+                    <p>{`Status: ${seat.status}`}</p>
+                    <p className={this.state.personInput ? 'close' : 'occupant_name'}
+                       onClick={this.openInputPerson.bind(this)}>{`Occupant: ${seat.occupant}`}
+
+                    </p>
+                    <span onClick={this.deleteOccupant.bind(this, seat, index)}
+                          className={this.state.personInput || seat.status == 'free' || !this.props.auth.login ? 'close' : 'del_occupant'}>&times;</span>
+
+                    <form className={!this.state.personInput ? 'close' : 'change_person'}
+                          onSubmit={this.changePerson.bind(this, seat, index)}>
+                        <select className="form-control">
+                            {persons}
+                        </select>
+                        <input className="btn btn-secondary" type="submit" value="Save"/>
+                    </form>
+                    <button className={this.props.auth.login ? 'btn btn-secondary dell_seat' : 'close'}
+                            onClick={this.deleteSeat.bind(this, seat, index)}>Delete seat
+                    </button>
+                    <span className="close_pop_up_seat" onClick={this.closePopUp.bind(this, index)}>
+                                <i className="fa fa-window-close" aria-hidden="true"></i>
+                            </span>
+
+                </div>
+
+            </Draggable>
+
+
+
+            )
+        });
+
+
         const seats = this.props.seat.seats.map((seat, index) => {
             return (
 
@@ -300,44 +355,16 @@ class FloorPlan extends Component {
                          className={seat.style == "hightLight" ? 'hightLight seat' : 'seat'}>
 
                         <span className="status">{seat.title}</span>
-                        <div className="seat_popup">
-                            {!this.state.titleInput ?
-                                <h6 onClick={::this.openInputTitle}>{`Title: ${seat.title}`}</h6> :
-                                <form ref="form" className={!this.state.titleInput ? 'close' : 'change_title'}
-                                      onSubmit={this.changeTitle.bind(this, seat, index)}>
-                                    <input className="form-control" type="text" defaultValue={seat.title}/>
-                                    <input className="btn btn-secondary" type="submit" value="Save"/>
-                                </form> }
 
 
-                            <p>{`Status: ${seat.status}`}</p>
-                            <p className={this.state.personInput ? 'close' : 'occupant_name'}
-                               onClick={this.openInputPerson.bind(this)}>{`Occupant: ${seat.occupant}`}
 
-                            </p>
-                            <span onClick={this.deleteOccupant.bind(this, seat, index)}
-                                  className={this.state.personInput || seat.status == 'free' || !this.props.auth.login ? 'close' : 'del_occupant'}>&times;</span>
-
-                            <form className={!this.state.personInput ? 'close' : 'change_person'}
-                                  onSubmit={this.changePerson.bind(this, seat, index)}>
-                                <select className="form-control">
-                                    {persons}
-                                </select>
-                                <input className="btn btn-secondary" type="submit" value="Save"/>
-                            </form>
-                            <button className={this.props.auth.login ? 'btn btn-secondary dell_seat' : 'close'}
-                                    onClick={this.deleteSeat.bind(this, seat, index)}>Delete seat
-                            </button>
-                            <span className="close_pop_up_seat" onClick={::this.closePopUp}>
-                                <i className="fa fa-window-close" aria-hidden="true"></i>
-                            </span>
-
-                        </div>
                     </div>
 
                 </Draggable>
             )
         });
+
+       
 
         return (
 
@@ -347,6 +374,7 @@ class FloorPlan extends Component {
                     <span className="selection_cross" onClick={::this.offSelectionMode}>&times;</span></div> : "" }
                 {this.props.seat.fetchingSeats ? <img src="../../img/spinner.gif"/> : '' }
                 {seats}
+                {seat_pop_up}
             </div>
         )
     }
